@@ -10,18 +10,18 @@ namespace Sisense.SingleSignOn
 {
     public class SisenseJwtProvider : ISisenseJwtProvider
     {
-        public string CreateJwt(SisenseJwtRequest jwtRequest)
+        public string CreateJwt(string emailAddress, string sharedSecret)
         {
             TimeSpan timeSinceEpoch = (DateTime.UtcNow - new DateTime(1970, 1, 1));
             string secondsSinceEpoch = ((int)timeSinceEpoch.TotalSeconds).ToString();
 
             var claims = new List<Claim> {
-                new Claim(JwtClaimTypes.Subject, jwtRequest.EmailAddress),
+                new Claim(JwtClaimTypes.Subject, emailAddress),
                 new Claim(JwtClaimTypes.IssuedAt, secondsSinceEpoch, ClaimValueTypes.Integer),
                 new Claim(JwtClaimTypes.JwtId, Guid.NewGuid().ToString())
             };
             
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtRequest.SharedSecret));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(sharedSecret));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(

@@ -2,6 +2,6 @@
 {
     public interface ISisenseJwtProvider
     {
-        string CreateJwt(SisenseJwtRequest jwtRequest);
+        string CreateJwt(string emailAddress, string sharedSecret);
     }
 }
